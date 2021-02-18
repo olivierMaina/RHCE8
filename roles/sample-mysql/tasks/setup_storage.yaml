@@ -1,0 +1,38 @@
+---
+- name: create /dev/sda partition
+  parted:
+   device: /dev/sda
+   number: 1
+   state: present
+   flags: [lvm]
+   part_start: 1MiB
+   part_end: 800MiB
+   label: gpt
+
+- name: create vg_database
+  lvg:
+   vg: vg_database
+   pvs: /dev/sda1
+
+- name: create logival volume
+  lvol:
+   lv: lv_mysql
+   vg: vg_database
+   size: 512m
+
+- name: XFS format the volume
+  filesystem:
+   dev: /dev/vg_database/lv_mysql
+   fstype: xfs
+
+- name: make a directory
+  file:
+   state: directory
+   path: /mnt/mysql_backups
+
+- name: mounting the volume to /mnt/mysql_backup
+  mount:
+   src: /dev/vg_database/lv_mysql
+   fstype: xfs
+   state: mounted
+   path: /mnt/mysql_backups

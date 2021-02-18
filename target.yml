@@ -1,0 +1,11 @@
+---
+- name: set target to multi-user on webservers host group
+  become: true
+  become_user: root
+  hosts: webservers
+  tasks:
+  - name: set default boot target to multi-user
+    file:
+     src: /usr/lib/systemd/system/graphical.target
+     dest: /etc/systemd/system/default.target
+     state: link

@@ -1,0 +1,22 @@
+---
+- name: Create local facts in database hosts
+  hosts: database
+  become: true
+  become_user: root
+  tasks:
+  - name: create file in /etc/ansible/facts.d
+    file:
+     state: directory
+     recurse: yes
+     path: /etc/ansible/facts.d
+  - name: create custom.fact 
+    file: 
+     path: /etc/ansible/facts.d/custom.fact
+     state: touch
+
+  - name: Edit fact file
+    blockinfile:
+     path: /etc/ansible/facts.d/custom.fact
+     block: |
+      [sample_exam]
+       package = httpd

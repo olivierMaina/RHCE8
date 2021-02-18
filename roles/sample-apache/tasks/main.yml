@@ -1,0 +1,32 @@
+---
+# tasks file for sample-apache
+- name: install packages
+  yum:
+   name: "{{ item }}"
+   state: latest
+  loop: "{{ packages }}"
+
+- name: start and enable apache
+  service: 
+   name: httpd
+   state: started
+   enabled: yes
+
+- name: configure firewall to allow traffic on 443
+  firewalld:
+   service: https
+   state: enabled
+   permanent: yes
+   immediate: yes
+- name: Open port 80
+  firewalld:
+   service: http
+   state: enabled
+   permanent: yes
+   immediate: yes
+
+- name: Edit landing page
+  template:
+   src: index.html.j2
+   dest: /var/www/html/index.html
+  notify: restart apache

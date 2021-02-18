@@ -1,0 +1,26 @@
+---
+- name: Install packages
+  become: true
+  become_user: root
+  hosts: all
+  vars:
+   proxy:
+   - tcpdump
+   - mailx
+   database:
+   - lsof
+   - mailx
+  tasks:
+  - name: install packages on proxy hosts
+    yum:
+     name: "{{ item }}"
+     state: latest
+    loop: "{{ proxy }}"
+    when: ansible_hostname in groups['proxy']
+
+  - name: install packages on database group
+    yum:
+     name: "{{ item }}"
+     state: latest
+    loop: "{{ database }}"
+    when: ansible_hostname in groups['database']

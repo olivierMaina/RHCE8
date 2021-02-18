@@ -1,0 +1,11 @@
+---
+- name: Schedule Cron job
+  hosts: proxy
+  tasks:
+  - name: cron job
+    cron:
+      name: "append date"
+      minute: "0"
+      hour: "*"
+      job: "/usr/bin/date >> /var/log/time.log"
+

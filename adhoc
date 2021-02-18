@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ansible all -i inventory -m user -a "name=automation state=present" --become -u root;
+ansible all -i inventory -m shell -a "echo devops | passwd --stdin automation" -u root --become;
+
+ansible all -i inventory -m authorized_key -a "user=automation state=present key={{lookup('file', '/home/automation/.ssh/id_rsa.pub')}}" --become -u root;
+ansible all -m copy -a "content='automation ALL=(ALL) NOPASSWD: ALL' dest=/etc/sudoers.d/automation validate='/usr/sbin/visudo -cf %s'" --become -u root;

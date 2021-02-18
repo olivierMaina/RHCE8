@@ -1,0 +1,38 @@
+---
+- name: install mysql
+  yum:
+   name: 
+   - mysql-server
+   #- mysql-client
+   - PyMySQL
+   state: latest
+
+- name: start and enable mysql server   
+  service:                              
+   name: mysqld                         
+   state: started                       
+   enabled: yes 
+
+- name: Edit mysql config file
+  template:
+   src: ../templates/my.cnf.j2
+   dest: /etc/my.cnf
+   owner: root
+   group: root
+   mode: 0644
+  notify: restart mysql
+- name: update mysql root password
+  mysql_user:
+   name: root
+   host: localhost
+   password: "{{ database_password }}"
+   login_user: root
+   check_implicit_admin: yes
+   priv: "*.*:ALL,GRANT"
+
+- name: Allow mysql through firewall
+  firewalld:
+   service: mysql
+   permanent: yes
+   immediate: yes
+   state: enabled

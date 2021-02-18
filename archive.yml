@@ -1,0 +1,20 @@
+---
+- name: Archiving
+  hosts: database
+  become: true
+  become_user: root
+  tasks:
+  - name: Create database_list.txt
+    file:
+     path: /mnt/mysql_backups/database_list.txt
+     state: touch
+  - name: edit file content
+    copy:
+     content: "dev,test,qa,prod"
+     dest: /mnt/mysql_backups/database_list.txt
+  - name: create gzip archive
+    archive:
+     path: /mnt/mysql_backups/database_list.txt
+     dest: /mnt/mysql_backups/archive.gz
+     format: gz
+     force_archive: yes

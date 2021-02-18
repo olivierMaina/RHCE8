@@ -1,0 +1,12 @@
+---
+- name: Check local_fact
+  hosts: database
+  become: true
+  become_user: root
+  tasks:
+  - name: set fact
+    set_fact: 
+     inventory_files: "{{ groups['all'] }}"
+  - name: check if local fact exit
+    debug:
+     msg: "{{inventory_files }}"

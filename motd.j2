@@ -1,0 +1,9 @@
+{% if ansible_hostname in groups['proxy'] %}
+Welcome to the Proxy server
+{% elif	 ansible_hostname in groups['webservers'] %}
+Welcome to Apache Web server
+{% elif ansible_hostname in groups['database'] %}
+Welcome to MySQL server
+{% endif %}
+
+

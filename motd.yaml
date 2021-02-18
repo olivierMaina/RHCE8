@@ -1,0 +1,10 @@
+---
+- name: Edit motd msg
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+  - name: write mtd value
+    template:
+      src: motd.j2
+      dest: /etc/motd

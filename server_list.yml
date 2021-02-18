@@ -1,0 +1,14 @@
+---
+- name: create hosts file
+  become: true
+  become_user: root
+  hosts: all
+  tasks:
+  - name: copy template
+    template:
+     src: server_list.j2
+     dest: /etc/server_list.txt
+     mode: '0600'
+     owner: automation
+     setype: net_conf_t
+    when: inventory_hostname in groups['database']
